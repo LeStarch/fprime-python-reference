@@ -29,22 +29,27 @@ module ReferenceDeployment {
   instance rateGroup1: Svc.ActiveRateGroup base id 0x10001000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 120
+    priority 99
 
   instance rateGroup2: Svc.ActiveRateGroup base id 0x10002000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 119
+    priority 98
 
   instance rateGroup3: Svc.ActiveRateGroup base id 0x10003000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 118
+    priority 97
 
   instance cmdSeq: Svc.CmdSequencer base id 0x10004000 \
     queue size Default.QUEUE_SIZE \
     stack size Default.STACK_SIZE \
-    priority 117
+    priority 96
+  
+  instance activePython: FprimePythonReference.ActivePythonExample base id 0x10005000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 95
 
   # ----------------------------------------------------------------------
   # Queued component instances
@@ -62,6 +67,6 @@ module ReferenceDeployment {
   instance systemResources: Svc.SystemResources base id 0x10012000
 
   instance timer: Svc.LinuxTimer base id 0x10013000
-  instance comDriver: Drv.TcpClient base id 0x10014000
 
+  instance comDriver: Drv.TcpClient base id 0x10014000
 }

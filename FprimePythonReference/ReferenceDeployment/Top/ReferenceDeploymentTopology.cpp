@@ -53,6 +53,7 @@ void configureTopology() {
 // Public functions for use in main program are namespaced with deployment name ReferenceDeployment
 namespace ReferenceDeployment {
 void setupTopology(const TopologyState& state) {
+    printf("[INFO] Running Topology Setup\n");
     // Autocoded initialization. Function provided by autocoder.
     initComponents(state);
     // Autocoded id setup. Function provided by autocoder.
@@ -63,8 +64,8 @@ void setupTopology(const TopologyState& state) {
     regCommands();
     // Autocoded configuration. Function provided by autocoder.
     configComponents(state);
-    if (state.hostname != nullptr && state.port != 0) {
-        comDriver.configure(state.hostname, state.port);
+    if (state.hostname != "" && state.port != 0) {
+        comDriver.configure(state.hostname.c_str(), state.port);
     }
     // Project-specific component configuration. Function provided above. May be inlined, if desired.
     configureTopology();
@@ -73,8 +74,9 @@ void setupTopology(const TopologyState& state) {
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
     // Initialize socket communication if and only if there is a valid specification
-    if (state.hostname != nullptr && state.port != 0) {
+    if (state.hostname != "" && state.port != 0) {
         Os::TaskString name("ReceiveTask");
+        printf("[INFO] Starting ReceiveTask: %s:%d\n", state.hostname.c_str(), state.port);
         // Uplink is configured for receive so a socket task is started
         comDriver.start(name, COMM_PRIORITY, Default::STACK_SIZE);
     }
@@ -85,6 +87,9 @@ void startRateGroups(const Fw::TimeInterval& interval) {
     // Svc::RateGroupDriver will divide this down to the slower rate groups.
     // This call will block until the stopRateGroups() call is made.
     // For this Linux demo, that call is made from a signal handler.
+    printf("[INFO] Starting timer with interval %u sec, %u usec\n",
+           interval.getSeconds(),
+           interval.getUSeconds());
     timer.startTimer(interval);
 }
 

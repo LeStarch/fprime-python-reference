@@ -5,7 +5,7 @@
 // ======================================================================
 #ifndef REFERENCEDEPLOYMENT_REFERENCEDEPLOYMENTTOPOLOGYDEFS_HPP
 #define REFERENCEDEPLOYMENT_REFERENCEDEPLOYMENTTOPOLOGYDEFS_HPP
-
+#include <string>
 // Subtopology PingEntries includes
 #include "Svc/Subtopologies/CdhCore/PingEntries.hpp"
 #include "Svc/Subtopologies/ComCcsds/PingEntries.hpp"
@@ -62,7 +62,7 @@ namespace ReferenceDeployment {
  * contents are entirely up to the definition of the project. This deployment uses subtopologies.
  */
 struct TopologyState {
-    const char* hostname;   //!< Hostname for TCP communication
+    std::string hostname;  //!< Hostname for TCP communication
     U16 port;              //!< Port for TCP communication
     CdhCore::SubtopologyState cdhCore;           //!< Subtopology state for CdhCore
     ComCcsds::SubtopologyState comCcsds;         //!< Subtopology state for ComCcsds 

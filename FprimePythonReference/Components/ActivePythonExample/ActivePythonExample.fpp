@@ -14,6 +14,7 @@ module FprimePythonReference {
         sync input port pythonInReturnPort: PythonReturnPort
 
         output port pythonOutPort: PythonPort
+        
         output port pythonOutReturnPort: PythonReturnPort
         
         event PythonEvent(enum_argument: PythonEnumeration,
