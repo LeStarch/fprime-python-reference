@@ -3,5 +3,5 @@
 
 # Local requirements:
 -r ./lib/fprime/requirements.txt
--r ./lib/fprime-python/requirements.txt
-#git+https://github.com/fprime-community/fprime-python-model/@main
+pybind11==3.0.1
+./lib/fprime-python/

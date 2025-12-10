@@ -1,4 +1,5 @@
-#include "DeploymentBindings.hpp"
+#include "FprimePython/FprimePython.hpp"
+#include "FprimePythonReference/ReferenceDeployment/Top/ReferenceDeploymentTopology.hpp"
 
 // Function used to bind the deployment into Python
 void setup_user_deployment(pybind11::module_& m) {
