@@ -55,6 +55,8 @@ module ReferenceDeployment {
   # Queued component instances
   # ----------------------------------------------------------------------
 
+  instance pythonGc: FprimePythonReference.PythonGc base id 0x10009000 \
+    queue size Default.QUEUE_SIZE 
 
   # ----------------------------------------------------------------------
   # Passive component instances
@@ -66,7 +68,7 @@ module ReferenceDeployment {
 
   instance systemResources: Svc.SystemResources base id 0x10012000
 
-  instance timer: Svc.LinuxTimer base id 0x10013000
+  instance timer: FprimePython.PythonRateGroupDriver base id 0x10013000
 
   instance pythonCom: FprimePythonReference.PythonTcpCom base id 0x10014000
 

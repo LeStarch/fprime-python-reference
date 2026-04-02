@@ -4,6 +4,12 @@ module FprimePythonReference {
     passive component PythonTcpCom {
         import Svc.Com
 
+        @ Track that a python reference was tracked in F Prime
+        output port referenceTracked: Fw.Signal
+
+        @ Track that a python reference was untracked in F Prime
+        output port referenceUntracked: Fw.Signal
+
         ###############################################################################
         # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
         ###############################################################################

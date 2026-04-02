@@ -42,10 +42,10 @@ def fsw_main():
     try:
         print("[INFO] Launching F Prime ")
         fprime_py.setupTopology(topology_state)
-        fprime_py.startRateGroups()
+        fprime_py.startRateGroups() ## TODO: how do I call functions on the python objects?
     except Exception as e:
         print(f"[ERROR] Failed to start F Prime: {e}")
-    fprime_py.teardownTopology()
+    fprime_py.teardownTopology(topology_state)
     exit(0)
 
 # For cases when run without fprime-python-runner

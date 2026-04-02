@@ -70,6 +70,9 @@ class PythonTcpCom(PythonTcpComBase):
                 data = self.client_socket.recv(1024)
                 if not data:
                     continue
+                # Update reference tracking when the port is connected
+                if self.isConnected_referenceTracked_OutputPort(0):
+                    self.referenceTracked_out(0)
                 self.dataOut_out(0, fprime_py.Fw.Buffer(data), fprime_py.ComCfg.FrameContext())
             except Exception as exc:
                 print(f"[ERROR] Error in receive_thread: {exc}")
@@ -77,14 +80,17 @@ class PythonTcpCom(PythonTcpComBase):
     def dataIn_handler(self, portNum, data, context):
         """ Handle the dataIn port """
         try:
-            #assert self.client_socket is not None, "client_socket must be set before dataIn_handler is called"
+            assert self.client_socket is not None, "client_socket must be set before dataIn_handler is called"
             self.client_socket.sendall(data.getData())
             self.dataReturnOut_out(portNum, data, context)
             self.comStatusOut_out(0, fprime_py.Fw.Success(fprime_py.Fw.Success.T.SUCCESS))
         except Exception as exc:
             print(f"[ERROR] Error in dataIn_handler: {exc}")
-            #self.comStatusOut_out(0, fprime_py.Fw.Success(fprime_py.Fw.Success.T.FAILURE))
+            self.comStatusOut_out(0, fprime_py.Fw.Success(fprime_py.Fw.Success.T.FAILURE))
 
     def dataReturnIn_handler(self, portNum, data, context):
         """ Handle the dataReturnIn port """
-        pass # Python is garbage collected
+        # Update reference tracking when the port is connected
+        if self.isConnected_referenceUntracked_OutputPort(0):
+            self.referenceUntracked_out(0)
+        data.deallocate()

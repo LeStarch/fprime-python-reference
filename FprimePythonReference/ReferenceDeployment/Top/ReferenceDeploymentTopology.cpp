@@ -10,7 +10,8 @@
 
 // Necessary project-specified types
 #include <Fw/Types/MallocAllocator.hpp>
-
+#include "Fw/Logger/Logger.hpp"
+#include "Os/Console.hpp"
 // Allows easy reference to objects in FPP/autocoder required namespaces
 using namespace ReferenceDeployment;
 
@@ -53,7 +54,8 @@ void configureTopology() {
 // Public functions for use in main program are namespaced with deployment name ReferenceDeployment
 namespace ReferenceDeployment {
 void setupTopology(const TopologyState& state) {
-    printf("[INFO] Running Topology Setup\n");
+    Os::Console::init();
+    Fw::Logger::log("[INFO] Starting Topology Setup\n");
     // Autocoded initialization. Function provided by autocoder.
     initComponents(state);
     // Autocoded id setup. Function provided by autocoder.
@@ -70,21 +72,6 @@ void setupTopology(const TopologyState& state) {
     loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
-}
-
-void startRateGroups(const Fw::TimeInterval& interval) {
-    // The timer component drives the fundamental tick rate of the system.
-    // Svc::RateGroupDriver will divide this down to the slower rate groups.
-    // This call will block until the stopRateGroups() call is made.
-    // For this Linux demo, that call is made from a signal handler.
-    printf("[INFO] Starting timer with interval %u sec, %u usec\n",
-           interval.getSeconds(),
-           interval.getUSeconds());
-    timer.startTimer(interval);
-}
-
-void stopRateGroups() {
-    timer.quit();
 }
 
 void teardownTopology(const TopologyState& state) {

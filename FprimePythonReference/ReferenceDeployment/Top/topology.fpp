@@ -33,6 +33,7 @@ module ReferenceDeployment {
     instance cmdSeq
     instance activeImager
     instance pythonCom
+    instance pythonGc
 
   # ----------------------------------------------------------------------
   # Pattern graph specifiers
@@ -55,7 +56,6 @@ module ReferenceDeployment {
   # ----------------------------------------------------------------------
   # Direct graph specifiers
   # ----------------------------------------------------------------------
-
        
     connections PythonCommunications {
         # Framer <-> PythonTcpCom (Downlink)
@@ -105,6 +105,7 @@ module ReferenceDeployment {
       rateGroup1.RateGroupMemberOut[1] -> FileHandling.fileDownlink.Run
       rateGroup1.RateGroupMemberOut[2] -> systemResources.run
       rateGroup1.RateGroupMemberOut[3] -> ComCcsds.comQueue.run
+      rateGroup1.RateGroupMemberOut[4] -> pythonGc.run
 
       # Rate group 2
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
@@ -117,6 +118,7 @@ module ReferenceDeployment {
       rateGroup3.RateGroupMemberOut[2] -> DataProducts.dpBufferManager.schedIn
       rateGroup3.RateGroupMemberOut[3] -> DataProducts.dpWriter.schedIn
       rateGroup3.RateGroupMemberOut[4] -> DataProducts.dpMgr.schedIn
+      
     }
 
     connections CdhCore_cmdSeq {
@@ -127,6 +129,9 @@ module ReferenceDeployment {
 
     connections ReferenceDeployment {
         activeImager.downlinkImage -> FileHandling.fileDownlink.SendFile
+        
+        pythonCom.referenceTracked -> pythonGc.referenceTracked
+        pythonCom.referenceUntracked -> pythonGc.referenceUntracked
     }
 
   }
