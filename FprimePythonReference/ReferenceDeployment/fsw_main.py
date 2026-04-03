@@ -42,11 +42,17 @@ def fsw_main():
     try:
         print("[INFO] Launching F Prime ")
         fprime_py.setupTopology(topology_state)
-        fprime_py.startRateGroups() ## TODO: how do I call functions on the python objects?
+        fprime_py.ReferenceDeployment.Instances.pythonCom.configure(topology_state.hostname, topology_state.port)
+        fprime_py.ReferenceDeployment.Instances.pythonCom.start()
+        fprime_py.ReferenceDeployment.Instances.timer.driveRateGroup(fprime_py.Fw.TimeInterval(1, 0))
+        fprime_py.ReferenceDeployment.Instances.pythonCom.stop()
+    except KeyboardInterrupt:
+        print("[INFO] CTRL-C received, shutting down F Prime")
     except Exception as e:
         print(f"[ERROR] Failed to start F Prime: {e}")
     fprime_py.teardownTopology(topology_state)
-    exit(0)
+    print("[INFO] F Prime shutdown complete")
+
 
 # For cases when run without fprime-python-runner
 if __name__ == "__main__":

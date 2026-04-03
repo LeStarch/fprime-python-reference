@@ -19,8 +19,9 @@ class PythonTcpCom(PythonTcpComBase):
         the F Prime topology is not yet fully constructed, so only basic initialization should be done here.
         """
         super().__init__()
-        self.configure("localhost", 50000)
-        self.start()
+        self.client_socket = None
+        self.server = None
+        self.thread = None
     
     def configure(self, host, port):
         """ Start the TCP communication process
@@ -55,27 +56,33 @@ class PythonTcpCom(PythonTcpComBase):
         and stop the receive thread.
         """
         self.done_receiving = True
+        if self.server:
+            self.server.close()
         if self.client_socket:
             self.client_socket.close()
-        self.server.close()
-        self.thread.join()
+        if self.thread:
+            self.thread.join()
+            print("[INFO] TCP communication thread stopped")
 
     def receive_thread(self):
         """ Thread that receives data from the TCP connection """
-        self.client_socket, address = self.server.accept()
-        print(f"[INFO] Accepted connection from: {address}")
-        self.comStatusOut_out(0, fprime_py.Fw.Success(fprime_py.Fw.Success.T.SUCCESS))
-        while not self.done_receiving:
-            try:
-                data = self.client_socket.recv(1024)
-                if not data:
-                    continue
-                # Update reference tracking when the port is connected
-                if self.isConnected_referenceTracked_OutputPort(0):
-                    self.referenceTracked_out(0)
-                self.dataOut_out(0, fprime_py.Fw.Buffer(data), fprime_py.ComCfg.FrameContext())
-            except Exception as exc:
-                print(f"[ERROR] Error in receive_thread: {exc}")
+        try:
+            self.client_socket, address = self.server.accept()
+            print(f"[INFO] Accepted connection from: {address}")
+            self.comStatusOut_out(0, fprime_py.Fw.Success(fprime_py.Fw.Success.T.SUCCESS))
+            while not self.done_receiving:
+                try:
+                    data = self.client_socket.recv(1024)
+                    if not data:
+                        continue
+                    # Update reference tracking when the port is connected
+                    if self.isConnected_referenceTracked_OutputPort(0):
+                        self.referenceTracked_out(0)
+                    self.dataOut_out(0, fprime_py.Fw.Buffer(data), fprime_py.ComCfg.FrameContext())
+                except Exception as exc:
+                    print(f"[ERROR] Error in receive_thread: {exc}")
+        except Exception as exc:
+            print(f"[ERROR] Failed to establish TCP connection: {exc}")
 
     def dataIn_handler(self, portNum, data, context):
         """ Handle the dataIn port """
