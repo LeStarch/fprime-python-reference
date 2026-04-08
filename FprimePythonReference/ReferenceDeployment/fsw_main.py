@@ -37,11 +37,12 @@ def fsw_main():
     topology_state = fprime_py.TopologyState()
     topology_state.hostname = args.hostname
     topology_state.port = args.port
+    fprime_py.Os.init()
 
     # Launch F Prime system
     try:
         print("[INFO] Launching F Prime ")
-        fprime_py.setupTopology(topology_state)
+        fprime_py.ReferenceDeployment.setup(topology_state)
         fprime_py.ReferenceDeployment.Instances.pythonCom.configure(topology_state.hostname, topology_state.port)
         fprime_py.ReferenceDeployment.Instances.pythonCom.start()
         fprime_py.ReferenceDeployment.Instances.timer.driveRateGroup(fprime_py.Fw.TimeInterval(1, 0))
@@ -50,7 +51,7 @@ def fsw_main():
         print("[INFO] CTRL-C received, shutting down F Prime")
     except Exception as e:
         print(f"[ERROR] Failed to start F Prime: {e}")
-    fprime_py.teardownTopology(topology_state)
+    fprime_py.ReferenceDeployment.teardown(topology_state)
     print("[INFO] F Prime shutdown complete")
 
 
